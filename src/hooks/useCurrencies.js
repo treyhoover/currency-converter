@@ -3,7 +3,8 @@ import { useReducer, useEffect } from "react";
 export default function useCurrencies(symbols = ["USD"]) {
   const defaultState = {
     rates: {},
-    currencies: symbols.map(symbol => ({
+    currencies: symbols.map((symbol, i) => ({
+      id: i,
       symbol,
       value: 1
     })),
@@ -12,6 +13,21 @@ export default function useCurrencies(symbols = ["USD"]) {
 
   function reducer(state, action) {
     switch (action.type) {
+      case "UPDATE_SYMBOL": {
+        const { index, symbol } = action.payload;
+
+        const currencies = Object.assign([...state.currencies], {
+          [index]: {
+            ...state.currencies[index],
+            symbol
+          }
+        });
+
+        return {
+          ...state,
+          currencies
+        };
+      }
       case "UPDATE_VALUE": {
         const { index, value } = action.payload;
 
@@ -62,6 +78,15 @@ export default function useCurrencies(symbols = ["USD"]) {
 
   return {
     ...state,
+    updateSymbol: (index, symbol) => {
+      dispatch({
+        type: "UPDATE_SYMBOL",
+        payload: {
+          index,
+          symbol
+        }
+      });
+    },
     updateValue: (index, value) => {
       dispatch({
         type: "UPDATE_VALUE",

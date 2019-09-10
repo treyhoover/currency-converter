@@ -3,11 +3,11 @@
   margin-bottom: 1rem;
 }
 
-.currencyLabel {
+.currencySelector {
   margin-right: 0.5rem;
-  font-weight: bold;
+  width: 4rem;
 }
 
-.separator {
-  margin: 0 1rem;
+.deleteCurrencyButton {
+  margin-left: 0.5rem;
 }
