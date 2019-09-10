@@ -9,6 +9,7 @@ const Converter = props => {
     getValue,
     updateValue,
     updateSymbol,
+    addCurrency,
     removeCurrency
   } = useCurrencies(["USD", "EUR", "GBP"]);
 
@@ -53,6 +54,15 @@ const Converter = props => {
           </div>
         );
       })}
+
+      <button
+        type="button"
+        onClick={e => {
+          addCurrency();
+        }}
+      >
+        Add Currency
+      </button>
     </form>
   );
 };

@@ -50,6 +50,21 @@ export default function useCurrencies(symbols = ["USD"]) {
           currencies: action.payload
         };
       }
+      case "ADD_CURRENCY": {
+        const { symbol = "USD", value = 1 } = action.payload;
+
+        return {
+          ...state,
+          currencies: [
+            ...state.currencies,
+            {
+              id: state.currencies.length,
+              symbol,
+              value
+            }
+          ]
+        };
+      }
       case "SET_RATES": {
         const rates = action.payload;
 
@@ -92,6 +107,15 @@ export default function useCurrencies(symbols = ["USD"]) {
         type: "UPDATE_VALUE",
         payload: {
           index,
+          value
+        }
+      });
+    },
+    addCurrency: (symbol, value) => {
+      dispatch({
+        type: "ADD_CURRENCY",
+        payload: {
+          symbol,
           value
         }
       });
