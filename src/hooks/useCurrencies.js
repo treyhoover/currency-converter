@@ -1,5 +1,7 @@
 import { useReducer, useEffect } from "react";
 
+const formatCurrency = n => Number(n.toFixed(2));
+
 export default function useCurrencies(symbols = ["USD"]) {
   const defaultState = {
     rates: {},
@@ -142,7 +144,7 @@ export default function useCurrencies(symbols = ["USD"]) {
 
       const srcValueUsd = srcValue / srcCurrencyRate;
 
-      return srcValueUsd * targetCurrencyRate;
+      return formatCurrency(srcValueUsd * targetCurrencyRate);
     }
   };
 }
