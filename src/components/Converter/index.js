@@ -3,7 +3,11 @@ import useCurrencies from "../../hooks/useCurrencies";
 import styles from "./converter.module.css";
 
 const Converter = props => {
-  const { currencies, updateValue } = useCurrencies(["USD", "EUR", "GBP"]);
+  const { currencies, updateValue, removeCurrency } = useCurrencies([
+    "USD",
+    "EUR",
+    "GBP"
+  ]);
 
   return (
     <form>
@@ -17,6 +21,14 @@ const Converter = props => {
             onChange={e => updateValue(Number(e.target.name), e.target.value)}
             onFocus={e => e.target.select()}
           />
+          <button
+            type="button"
+            onClick={e => {
+              removeCurrency(index);
+            }}
+          >
+            X
+          </button>
         </div>
       ))}
     </form>

@@ -37,6 +37,12 @@ export default function useCurrencies(symbols = ["USD"]) {
           src: index
         };
       }
+      case "SET_CURRENCIES": {
+        return {
+          ...state,
+          currencies: action.payload
+        };
+      }
       default:
         return state;
     }
@@ -53,6 +59,15 @@ export default function useCurrencies(symbols = ["USD"]) {
           index,
           value
         }
+      });
+    },
+    removeCurrency: index => {
+      dispatch({
+        type: "SET_CURRENCIES",
+        payload: [
+          ...state.currencies.slice(0, index),
+          ...state.currencies.slice(index + 1)
+        ]
       });
     }
   };
