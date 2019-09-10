@@ -1,14 +1,11 @@
 import { useReducer, useEffect } from "react";
 
-const formatNumber = n => Number(n.toFixed(2));
-
 export default function useCurrencies(symbols = ["USD"]) {
   const defaultState = {
     rates: {},
     currencies: symbols.map(symbol => ({
       symbol,
-      usdRate: -1,
-      value: -1
+      value: 1
     })),
     src: 0
   };
@@ -18,11 +15,12 @@ export default function useCurrencies(symbols = ["USD"]) {
       case "UPDATE_VALUE": {
         const { index, value } = action.payload;
 
-        const usd = formatNumber(value / state.currencies[index].usdRate);
-        const currencies = state.currencies.map((currency, i) => ({
-          ...currency,
-          value: i === index ? value : formatNumber(usd * currency.usdRate)
-        }));
+        const currencies = Object.assign([...state.currencies], {
+          [index]: {
+            ...state.currencies[index],
+            value
+          }
+        });
 
         return {
           ...state,
@@ -38,27 +36,10 @@ export default function useCurrencies(symbols = ["USD"]) {
       }
       case "SET_RATES": {
         const rates = action.payload;
-        const srcCurrency = state.currencies[state.src];
-        const srcUsdValue = srcCurrency.value / srcCurrency.usdRate;
-
-        const currencies = state.currencies.map((currency, index) => {
-          const usdRate = rates[currency.symbol];
-          const value =
-            currency.value === -1
-              ? formatNumber(usdRate * srcUsdValue)
-              : currency.value;
-
-          return {
-            ...currency,
-            usdRate,
-            value
-          };
-        });
 
         return {
           ...state,
-          rates,
-          currencies
+          rates
         };
       }
       default:
@@ -80,7 +61,7 @@ export default function useCurrencies(symbols = ["USD"]) {
   }, []);
 
   return {
-    currencies: state.currencies,
+    ...state,
     updateValue: (index, value) => {
       dispatch({
         type: "UPDATE_VALUE",
@@ -98,6 +79,21 @@ export default function useCurrencies(symbols = ["USD"]) {
           ...state.currencies.slice(index + 1)
         ]
       });
+    },
+    getValue: index => {
+      const { currencies, src, rates } = state;
+      const srcCurrency = currencies[src];
+      const srcValue = srcCurrency.value;
+      const srcCurrencyRate = rates[srcCurrency.symbol];
+      const targetCurrency = currencies[index];
+      const targetCurrencyRate = rates[targetCurrency.symbol];
+
+      // Use the user value when requesting for src
+      if (index === src) return srcValue;
+
+      const srcValueUsd = srcValue / srcCurrencyRate;
+
+      return srcValueUsd * targetCurrencyRate;
     }
   };
 }
