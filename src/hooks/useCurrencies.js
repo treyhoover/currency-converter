@@ -2,11 +2,13 @@ import { useReducer, useEffect } from "react";
 
 const formatCurrency = n => Number(n.toFixed(2));
 
+let currencyIdCounter = 0;
+
 export default function useCurrencies(symbols = ["USD"]) {
   const defaultState = {
     rates: {},
-    currencies: symbols.map((symbol, i) => ({
-      id: i,
+    currencies: symbols.map(symbol => ({
+      id: currencyIdCounter++,
       symbol,
       value: 1
     })),
@@ -60,11 +62,24 @@ export default function useCurrencies(symbols = ["USD"]) {
           currencies: [
             ...state.currencies,
             {
-              id: state.currencies.length,
+              id: currencyIdCounter++,
               symbol,
               value
             }
           ]
+        };
+      }
+      case "REMOVE_CURRENCY": {
+        const index = action.payload;
+
+        const currencies = [
+          ...state.currencies.slice(0, index),
+          ...state.currencies.slice(index + 1)
+        ];
+
+        return {
+          ...state,
+          currencies
         };
       }
       case "SET_RATES": {
@@ -124,11 +139,8 @@ export default function useCurrencies(symbols = ["USD"]) {
     },
     removeCurrency: index => {
       dispatch({
-        type: "SET_CURRENCIES",
-        payload: [
-          ...state.currencies.slice(0, index),
-          ...state.currencies.slice(index + 1)
-        ]
+        type: "REMOVE_CURRENCY",
+        payload: index
       });
     },
     getValue: index => {
