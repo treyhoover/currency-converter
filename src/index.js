@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Converter from "./Converter";
+import Converter from "./components/Converter";
 import "./index.css";
 
 const App = props => {
