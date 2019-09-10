@@ -1,47 +1,77 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import styles from "./converter.module.css";
 
-const symbols = {
-  USD: "USD",
-  EUR: "EUR"
+const defaultState = {
+  currencies: [
+    {
+      symbol: "USD",
+      value: 1,
+      usdRate: 1
+    },
+    {
+      symbol: "EUR",
+      value: 0.91,
+      usdRate: 0.91
+    },
+    {
+      symbol: "GBP",
+      value: 1.24,
+      usdRate: 1.24
+    }
+  ],
+  src: 0
 };
 
+function reducer(state, action) {
+  switch (action.type) {
+    case "UPDATE_VALUE": {
+      const { index, value } = action.payload;
+
+      const usd = Number((value / state.currencies[index].usdRate).toFixed(2));
+
+      const currencies = state.currencies.map((currency, i) => ({
+        ...currency,
+        value: i === index ? value : Number((usd * currency.usdRate).toFixed(2))
+      }));
+
+      return {
+        ...state,
+        currencies,
+        src: index
+      };
+    }
+    default:
+      return state;
+  }
+}
+
 const Converter = props => {
-  const USD_EUR_RATE = 0.91;
-  const [usd, setUsd] = useState(1);
-  const [eur, setEur] = useState(USD_EUR_RATE);
+  const [state, dispatch] = useReducer(reducer, defaultState);
 
   const handleInputChange = e => {
-    const { name, value } = e.target;
-
-    if (name === symbols.USD) {
-      setUsd(value);
-      setEur(value * USD_EUR_RATE);
-    } else if (name === symbols.EUR) {
-      setEur(value);
-      setUsd(value / USD_EUR_RATE);
-    }
+    dispatch({
+      type: "UPDATE_VALUE",
+      payload: {
+        index: Number(e.target.name),
+        value: e.target.value
+      }
+    });
   };
 
   return (
-    <form className={styles.converter}>
-      <label className={styles.currencyLabel}>USD</label>
-      <input
-        name={symbols.USD}
-        type="number"
-        value={usd}
-        onChange={handleInputChange}
-      />
-
-      <span className={styles.separator}>=</span>
-
-      <label className={styles.currencyLabel}>EUR</label>
-      <input
-        name={symbols.EUR}
-        type="number"
-        value={eur}
-        onChange={handleInputChange}
-      />
+    <form>
+      {state.currencies.map((currency, index) => (
+        <div className={styles.currency} key={currency.symbol}>
+          <label className={styles.currencyLabel}>{currency.symbol}</label>
+          <input
+            name={index}
+            type="number"
+            value={currency.value}
+            onChange={handleInputChange}
+            onFocus={e => e.target.select()}
+          />
+        </div>
+      ))}
     </form>
   );
 };

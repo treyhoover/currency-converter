@@ -1,7 +1,6 @@
-.converter {
-  background: #eee;
-  padding: 1rem;
-  min-height: 100vh;
+.currency {
+  display: block;
+  margin-bottom: 1rem;
 }
 
 .currencyLabel {

@@ -6,6 +6,7 @@ import "./index.css";
 const App = props => {
   return (
     <div>
+      <h1>Currency Converter</h1>
       <Converter />
     </div>
   );
