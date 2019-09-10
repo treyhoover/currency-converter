@@ -1,24 +1,18 @@
 import { useReducer } from "react";
 
-export default function useCurrencies() {
+const usdRates = {
+  USD: 1,
+  EUR: 0.91,
+  GBP: 1.24
+};
+
+export default function useCurrencies(symbols = ["USD"]) {
   const defaultState = {
-    currencies: [
-      {
-        symbol: "USD",
-        value: 1,
-        usdRate: 1
-      },
-      {
-        symbol: "EUR",
-        value: 0.91,
-        usdRate: 0.91
-      },
-      {
-        symbol: "GBP",
-        value: 1.24,
-        usdRate: 1.24
-      }
-    ],
+    currencies: symbols.map(symbol => ({
+      symbol,
+      usdRate: usdRates[symbol],
+      value: usdRates[symbol]
+    })),
     src: 0
   };
 

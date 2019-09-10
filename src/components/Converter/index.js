@@ -3,7 +3,7 @@ import useCurrencies from "../../hooks/useCurrencies";
 import styles from "./converter.module.css";
 
 const Converter = props => {
-  const { currencies, updateValue } = useCurrencies();
+  const { currencies, updateValue } = useCurrencies(["USD", "EUR", "GBP"]);
 
   return (
     <form>
