@@ -11,26 +11,32 @@ const Converter = props => {
 
   return (
     <form>
-      {currencies.map((currency, index) => (
-        <div className={styles.currency} key={currency.symbol}>
-          <label className={styles.currencyLabel}>{currency.symbol}</label>
-          <input
-            name={index}
-            type="number"
-            value={currency.value}
-            onChange={e => updateValue(Number(e.target.name), e.target.value)}
-            onFocus={e => e.target.select()}
-          />
-          <button
-            type="button"
-            onClick={e => {
-              removeCurrency(index);
-            }}
-          >
-            X
-          </button>
-        </div>
-      ))}
+      {currencies.map(({ symbol, usdRate, value }, index) => {
+        const loading = usdRate === -1;
+
+        return (
+          <div className={styles.currency} key={symbol}>
+            <label className={styles.currencyLabel}>{symbol}</label>
+            <input
+              name={index}
+              type={loading ? "text" : "number"}
+              value={loading ? "Loading..." : value}
+              disabled={loading}
+              onChange={e => updateValue(Number(e.target.name), e.target.value)}
+              onFocus={e => e.target.select()}
+            />
+            <button
+              type="button"
+              disabled={loading}
+              onClick={e => {
+                removeCurrency(index);
+              }}
+            >
+              X
+            </button>
+          </div>
+        );
+      })}
     </form>
   );
 };
