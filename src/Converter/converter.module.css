@@ -1,0 +1,14 @@
+.converter {
+  background: #eee;
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+.currencyLabel {
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.separator {
+  margin: 0 1rem;
+}
